@@ -4,8 +4,20 @@
 # In[1]:
 
 
+import os 
+import tarfile 
+import urllib 
+import requests
 import pandas as pd
-df = pd.read_csv('data/housing.csv.gz')
+url = "https://raw.githubusercontent.com/ageron/handson-ml2/master/datasets/housing/housing.tgz"
+response = requests.get(url, allow_redirects=True)
+if not os.path.exists('data'):
+    os.mkdir('data')
+open('data/housing.tgz', 'wb+').write(response.content)
+with tarfile.open('data/housing.tgz','r:gz') as tar:
+    tar.extractall('data')
+os.remove('data/housing.tgz')
+df = pd.read_csv('data/housing.csv')
 
 
 # In[2]:
@@ -38,7 +50,7 @@ df.describe()
 ax = df.hist(bins=50, figsize=(20,15))
 
 fig = ax[0][0].get_figure()
-fig.savefig("obraz1")
+fig.savefig("obraz1.png")
 
 
 # In[7]:
@@ -46,7 +58,7 @@ fig.savefig("obraz1")
 
 ax = df.plot(kind="scatter", x="longitude", y="latitude",
     alpha=0.1, figsize=(7,4))
-ax.figure.savefig("obraz2")
+ax.figure.savefig("obraz2.png")
 
 
 # In[8]:
@@ -57,7 +69,7 @@ df.plot(kind="scatter", x="longitude", y="latitude",
 alpha=0.4, figsize=(7,3), colorbar=True,
 s=df["population"]/100, label="population",
 c="median_house_value", cmap=plt.get_cmap("jet"))
-plt.savefig("obraz3")
+plt.savefig("obraz3.png")
 
 
 # In[9]:
